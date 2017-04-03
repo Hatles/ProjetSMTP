@@ -9,7 +9,7 @@ import java.util.List;
 public class QuitMethod extends SMTPMethod {
 
     public QuitMethod() {
-        super("QUIT");
+        super(new String[]{"QUIT"});
     }
 
     @Override
@@ -21,12 +21,13 @@ public class QuitMethod extends SMTPMethod {
             if(line.trim().toUpperCase().equals("QUIT"))
             {
                 try {
-                    sendOK("dewey POP3 server signing off");
+                    send221();
                 } catch (IOException e) {
                     e.printStackTrace();
                     return false;
                 }
                 communication.close();
+                communication.setStatus("Disconnected");
                 return true;
             }
 

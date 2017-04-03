@@ -1,5 +1,7 @@
 package com.polytech.smtp.server.method;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -7,29 +9,37 @@ import java.util.List;
  */
 public abstract class MethodCommand extends Method
 {
-    protected String command;
+    protected List<String> commands;
 
-    public MethodCommand(String command) {
-        super();
-        this.command = command.toUpperCase();
+    public MethodCommand(String[] commands) {
+        this(new ArrayList<String>(Arrays.asList(commands)));
     }
 
-    public String getCommand() {
-        return command;
+    public MethodCommand(List<String> commands) {
+        super();
+        this.commands = new ArrayList<String>();
+        for(String command : commands)
+        {
+            this.commands.add(command.toUpperCase());
+        }
+    }
+
+    public List<String> getCommands() {
+        return commands;
     }
 
     public boolean process(String command, List<String> lines)
     {
-        log("incomming command : "+command);
-        log("method command : "+this.command);
-        if(command.equals(this.command))
-        {
-            if(!this.processCommand(lines))
+        log("incomming commands : " + command);
+        for(String com : this.commands) {
+            log("method commands : "+com);
+        }
+
+        if (this.commands.contains(command.toUpperCase())) {
+            if (!this.processCommand(lines))
                 log("error process command");
             return true;
-        }
-        else
-        {
+        }else {
             log("method not match");
             return false;
         }

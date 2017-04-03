@@ -1,7 +1,9 @@
 package com.polytech.smtp.server.method;
 
-import com.Communication;
-import com.SMTPCommunication;
+
+
+import com.polytech.smtp.server.Communication;
+import com.polytech.smtp.server.SMTPCommunication;
 
 import java.io.File;
 import java.io.IOException;

@@ -38,7 +38,7 @@ public class SMTPCommunication extends CommunicationRunnable
     protected void onStart() {
         try {
             timestamp= Utils.createTimestamp(server.getServerName());
-            this.send("+OK POP3 server ready "+this.getServer().getServerName()+" "+timestamp);
+            this.send("220 "+this.getServer().getServerName()+" Simplet Mail Transfer Protocol");
         } catch (IOException e) {
             log(e.getMessage());
             e.printStackTrace();
@@ -139,4 +139,10 @@ public class SMTPCommunication extends CommunicationRunnable
             return statusObj;
         else throw new NoSuchElementException();
     }
+
+    public String getServerName()
+    {
+        return server.getServerName();
+    }
+
 }

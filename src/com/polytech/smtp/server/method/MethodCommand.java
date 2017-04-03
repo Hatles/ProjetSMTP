@@ -11,6 +11,10 @@ public abstract class MethodCommand extends Method
 {
     protected List<String> commands;
 
+    public MethodCommand(String command) {
+        this(new String[]{command});
+    }
+
     public MethodCommand(String[] commands) {
         this(new ArrayList<String>(Arrays.asList(commands)));
     }

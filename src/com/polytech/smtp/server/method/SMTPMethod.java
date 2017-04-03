@@ -16,6 +16,10 @@ public abstract class SMTPMethod extends MethodCommand
         super(commands);
     }
 
+    public SMTPMethod(String command) {
+        super(command);
+    }
+
     public void sendResponse(String response, String message) throws IOException {
         this.send(response + " " + message);
     }

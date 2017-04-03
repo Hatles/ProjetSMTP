@@ -20,6 +20,10 @@ public abstract class SMTPMethod extends MethodCommand
         this.send(response + " " + message);
     }
 
+    public void send221() throws IOException {
+        this.send("221 "+communication.getServerName()+" Service closing transmission channel");
+    }
+
     public void send250(String message) throws IOException {
         this.send("250 "+message);
     }

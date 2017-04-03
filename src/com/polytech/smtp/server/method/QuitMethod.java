@@ -9,7 +9,7 @@ import java.util.List;
 public class QuitMethod extends SMTPMethod {
 
     public QuitMethod() {
-        super(new String[]{"QUIT"});
+        super("QUIT");
     }
 
     @Override

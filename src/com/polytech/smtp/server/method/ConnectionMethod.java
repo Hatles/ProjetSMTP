@@ -16,9 +16,6 @@ public class ConnectionMethod extends SMTPMethod
     @Override
     public boolean processCommand(List<String> lines)
     {
-        if(communication.isConnected())
-            return false;
-
         for(String line : lines)
         {
                 String[] helo = line.split(" ");

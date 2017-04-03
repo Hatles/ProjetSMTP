@@ -33,7 +33,7 @@ abstract class CommunicationRunnable extends ServerRunnable implements Communica
     public void initBuffers()
     {
         try {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
             out = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e)
         {
@@ -166,7 +166,7 @@ abstract class CommunicationRunnable extends ServerRunnable implements Communica
 
     public void write(String message) throws IOException
     {
-        out.writeBytes(message);
+        out.writeUTF(message);
     }
 
     public void send(String message) throws IOException

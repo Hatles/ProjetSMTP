@@ -1,8 +1,10 @@
 package com.polytech.smtp.server.stockage;
 
-import com.Server;
-import org.json.simple.*;
-import org.json.simple.parser.*;
+
+import com.polytech.smtp.server.Server;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
 import java.util.ArrayList;

@@ -1,14 +1,17 @@
 package com.polytech.smtp.server;
 
-import com.factory.CommunicationFactory;
-import com.method.Method;
+import com.polytech.smtp.server.factory.CommunicationFactory;
+import com.polytech.smtp.server.method.Method;
+import com.polytech.smtp.server.status.Status;
+import com.polytech.smtp.server.stockage.Stockage;
 import com.polytech.smtp.utils.Utils;
-import com.stockage.Stockage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Created by kifkif on 15/02/2017.
@@ -19,13 +22,13 @@ public class SMTPCommunication extends CommunicationRunnable
     private String timestamp;
     private boolean connected;
 
-    private Method connectionMethod;
-    private List<Method> methods;
+    private Status status;
+    private Map<String, Status> statusMap;
 
     public SMTPCommunication(Server server, Socket socket, CommunicationFactory factory)
     {
         super(server, socket);
-        methods = new ArrayList<>();
+        statusMap = new HashMap<>();
         connected = false;
         factory.buildCommunication(this);
         Stockage.getInstance().setServer(server);
@@ -46,46 +49,13 @@ public class SMTPCommunication extends CommunicationRunnable
     protected void onClientCommunication(List<String> lines)
     {
         String command = Utils.getCommand(lines);
-        if(!connected)
-            this.processConnecting(command, lines);
-        else
-            this.processRequest(command,  lines);
-    }
-
-
-
-    private void processConnecting(String command, List<String> lines)
-    {
-        log("try process connecting");
-
-        if(this.connectionMethod != null)
-        {
-            this.connectionMethod.process(command, lines);
-        }
-        else
-        {
-            log("connection method null");
-//            log(e.getMessage());
-//            e.printStackTrace();
-            this.close();
-        }
+        this.processRequest(command,  lines);
     }
 
     private void processRequest(String command, List<String> lines)
     {
-        log("try process connecting");
-        for (Method method : methods) {
-            if(method.process(command, lines))
-                return;
-        }
-
-        this.onUnkownCommand(command, lines);
-    }
-
-    private void onUnkownCommand(String command, List<String> lines)
-    {
-        log("unknown command received from client : " + command);
-        //this.close();
+        log("try process command");
+        status.processCommand(command, lines);
     }
 
     protected String getTag()
@@ -117,37 +87,56 @@ public class SMTPCommunication extends CommunicationRunnable
         this.connected = connected;
     }
 
-    public Method getConnectionMethod() {
-        return connectionMethod;
+    public Map<String, Status> getStatusMap() {
+        return statusMap;
     }
 
-    public void setConnectionMethod(Method connectionMethod) {
-        connectionMethod.setCommunication(this);
-        this.connectionMethod = connectionMethod;
+    public void setStatusMap(Map<String, Status> statusMap) {
+        this.statusMap = statusMap;
     }
 
-    public List<Method> getMethods() {
-        return methods;
-    }
-
-    public void setMethods(List<Method> methods) {
-        this.methods = methods;
-    }
-
-    public void addMethod(Method method)
+    public void addStatus(Status status)
     {
-        method.setCommunication(this);
-        this.methods.add(method);
+        status.setCommunication(this);
+        this.statusMap.put(status.getName(), status);
     }
 
-    public void removeMethod(Method method)
+    public void removeStatus(Status status)
     {
-        this.methods.remove(method);
+        this.statusMap.remove(status);
+    }
+    public void removeStatus(String status)
+    {
+        this.statusMap.remove(status);
     }
 
     public void clientConnected(String name)
     {
         this.setName(name);
         this.setConnected(true);
+    }
+
+    public void setStatus(Status status)
+    {
+        this.status = status;
+    }
+
+    public void setStatus(String status)
+    {
+        try {
+            this.status = this.getStatus(status);
+        }
+        catch (NoSuchElementException e)
+        {
+            log(e.getMessage());
+        }
+    }
+
+    public Status getStatus(String status) throws NoSuchElementException
+    {
+        Status statusObj = statusMap.get(status);
+        if(statusObj != null)
+            return statusObj;
+        else throw new NoSuchElementException();
     }
 }

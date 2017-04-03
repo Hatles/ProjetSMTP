@@ -1,6 +1,7 @@
 package com.polytech.smtp.server;
 
-import observer.Observable;
+
+import com.polytech.smtp.utils.observer.Observable;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;

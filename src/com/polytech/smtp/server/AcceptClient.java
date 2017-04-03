@@ -1,6 +1,7 @@
 package com.polytech.smtp.server;
-import com.factory.CommunicationFactory;
-import com.factory.SMTPCommunicationFactory;
+
+import com.polytech.smtp.server.factory.CommunicationFactory;
+import com.polytech.smtp.server.factory.SMTPCommunicationFactory;
 
 import java.io.IOException;
 import java.net.Socket;

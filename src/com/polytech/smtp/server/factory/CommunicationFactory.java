@@ -1,6 +1,7 @@
 package com.polytech.smtp.server.factory;
 
-import com.SMTPCommunication;
+
+import com.polytech.smtp.server.SMTPCommunication;
 
 /**
  * Created by kifkif on 16/02/2017.

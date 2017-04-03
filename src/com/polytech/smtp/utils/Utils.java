@@ -1,7 +1,7 @@
 package com.polytech.smtp.utils;
 
-import com.stockage.Header;
-import com.stockage.Message;
+import com.polytech.smtp.server.stockage.Header;
+import com.polytech.smtp.server.stockage.Message;
 
 import java.io.File;
 import java.sql.Timestamp;

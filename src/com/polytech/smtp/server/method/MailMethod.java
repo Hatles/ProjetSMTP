@@ -1,6 +1,13 @@
 package com.polytech.smtp.server.method;
+
+import com.polytech.smtp.server.mail.Mailer;
+import com.polytech.smtp.server.stockage.Stockage;
+import com.polytech.smtp.server.stockage.User;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by corentinmarechal on 06/03/2017.
@@ -13,36 +20,55 @@ public class MailMethod extends SMTPMethod {
 
     @Override
     public boolean processCommand(List<String> lines) {
-       /* if (communication.getName().isEmpty())
+        if (communication.getName().isEmpty())
             return false;
-        for(String line : lines)
-        {
-            String[] mail = line.split(" ");
-            if(mail.length != 2) {
+        for (String line : lines) {
+            String[] mail = line.split(":");
+            if (mail.length != 2) {
                 try {
-                    send501();
+                    send500();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
                 return false;
             }
-            String[] mail = line.split(":");
 
-            String name = helo[1];
-            if(line.trim().toUpperCase().equals("MAIL"))
-            {
-                try {
-                    send221();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (mail[0].equals("MAIL FROM")) {
+                boolean syntaxtTest = mail[1].matches("<\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*\\.(?:[a-z]{2,4})>");
+                if (syntaxtTest) {
+                    try {
+                        send501();
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
                     return false;
                 }
-                communication.close();
-                communication.setStatus("WAITING RECEPTION DATE");
-                return true;
-            }
 
-        }*/
+                try {
+                    Pattern p = Pattern.compile("\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*\\.(?:[a-z]{2,4})");
+                    Matcher email = p.matcher(mail[1]);
+                    User user =Stockage.getInstance().getUserBank().getUser(email.group(0));
+                    Mailer.getInstance().from(user.getName());
+                    communication.setStatus("Waiting Reception Data");
+                    send250("OK");
+
+                    return true;
+                } catch (Exception e) {
+                    try {
+                        send550();
+                    } catch (IOException er) {
+                        er.printStackTrace();
+                    }
+                    return false;
+                }
+            } else {
+                try {
+                    send500();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         return false;
     }
 

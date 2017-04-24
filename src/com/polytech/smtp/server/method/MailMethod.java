@@ -1,9 +1,4 @@
 package com.polytech.smtp.server.method;
-import com.Utils;
-import com.stockage.Message;
-import com.stockage.Stockage;
-import com.stockage.User;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -18,11 +13,10 @@ public class MailMethod extends SMTPMethod {
 
     @Override
     public boolean processCommand(List<String> lines) {
-        if (communication.getName().isEmpty())
+       /* if (communication.getName().isEmpty())
             return false;
         for(String line : lines)
         {
-            MAIL FROM:<userx@y.foo.org>
             String[] mail = line.split(" ");
             if(mail.length != 2) {
                 try {
@@ -48,7 +42,7 @@ public class MailMethod extends SMTPMethod {
                 return true;
             }
 
-        }
+        }*/
         return false;
     }
 

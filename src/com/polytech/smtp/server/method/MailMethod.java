@@ -20,7 +20,7 @@ public class MailMethod extends SMTPMethod {
 
     @Override
     public boolean processCommand(List<String> lines) {
-        if (communication.getName().isEmpty())
+        if (communication.getName().isEmpty() && communication)
             return false;
         for (String line : lines) {
             String[] mail = line.split(":");
@@ -49,7 +49,7 @@ public class MailMethod extends SMTPMethod {
                     Matcher email = p.matcher(mail[1]);
                     User user =Stockage.getInstance().getUserBank().getUser(email.group(0));
                     Mailer.getInstance().from(user.getName());
-                    communication.setStatus("Waiting Reception Data");
+                    communication.setStatus("waiting_data");
                     send250("OK");
                     return true;
                 } catch (Exception e) {

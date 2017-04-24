@@ -40,7 +40,7 @@ public class ConnectionMethod extends SMTPMethod
                     }
                     return false;
                 }
-                communication.setStatus("Waiting Mail");
+                communication.setStatus("waiting_mail");
                 return true;
         }
 

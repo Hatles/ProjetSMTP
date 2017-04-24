@@ -19,7 +19,6 @@ import java.util.NoSuchElementException;
 public class SMTPCommunication extends CommunicationRunnable
 {
     private String name;
-    private String timestamp;
     private boolean connected;
 
     private Status status;
@@ -37,7 +36,6 @@ public class SMTPCommunication extends CommunicationRunnable
     @Override
     protected void onStart() {
         try {
-            timestamp= Utils.createTimestamp(server.getServerName());
             this.send("220 "+this.getServer().getServerName()+" Simplet Mail Transfer Protocol");
         } catch (IOException e) {
             log(e.getMessage());
@@ -70,9 +68,6 @@ public class SMTPCommunication extends CommunicationRunnable
 
     public String getName() {
         return name;
-    }
-    public String getTimestamp() {
-        return timestamp;
     }
 
     public void setName(String name) {

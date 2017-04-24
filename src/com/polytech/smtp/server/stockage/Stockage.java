@@ -76,4 +76,9 @@ public class Stockage
 
         return bank;
     }
+
+    public void addMessage(String from, List<String> to, String data)
+    {
+
+    }
 }

@@ -70,4 +70,9 @@ public class Mailer
         to = new ArrayList<>();
         data = new StringBuilder();
     }
+
+    public boolean hasRcpt()
+    {
+        return from != null && !to.isEmpty();
+    }
 }

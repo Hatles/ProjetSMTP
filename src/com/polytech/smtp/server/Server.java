@@ -28,8 +28,6 @@ public class Server extends Observable
 
 	private DateFormat dateFormat;
 
-	final String[] enabledCipherSuites = {"SSL_DH_anon_WITH_RC4_128_MD5"};
-
 	public Server(int port)
 	{
 		this.port = port;
@@ -47,11 +45,7 @@ public class Server extends Observable
 	{
 		try 
 		{
-			//socket = new ServerSocket(port);
-			SSLServerSocketFactory fab = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-			socket = fab.createServerSocket(port);
-			((SSLServerSocket)socket).setEnabledCipherSuites(((SSLServerSocket)socket).getSupportedCipherSuites());
-            ((SSLServerSocket)socket).setNeedClientAuth(false);
+			socket = new ServerSocket(port);
 			Thread t = new Thread(accept);
 			t.setDaemon(true);
 			t.start();

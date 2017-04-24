@@ -36,92 +36,95 @@ public class Client {
             BufferedWriter output = null;
 
             ServerAwnser awnser = null;
-
-
-            switch (state){
-                case BUILD:
-                    try {
-                        connection = new Socket(server, port);
-                        input = new BufferedReader(new InputStreamReader(connection.getInputStream(),"UTF-8"));
-                        output = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    state = ClientState.CONNECTION;
-                    break;
-                case DATA:
-                    awnser = ServerAwnser.readAwnser(input);
-                    if(!awnser.getCode().equals("354")){
-                        //TODO error DATA
+            boolean changeServer = false;
+            while(!changeServer){
+                switch (state){
+                    case BUILD:
+                        try {
+                            connection = new Socket(server, port);
+                            input = new BufferedReader(new InputStreamReader(connection.getInputStream(),"UTF-8"));
+                            output = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        state = ClientState.CONNECTION;
                         break;
-                    }
-                    sendCommand(output, messageToSend.getBody());
-                    awnser = ServerAwnser.readAwnser(input);
-                    if(!awnser.getCode().equals("250")){
-                        //TODO error DATA
+                    case DATA:
+                        awnser = ServerAwnser.readAwnser(input);
+                        if(!awnser.getCode().equals("354")){
+                            //TODO error DATA
+                            break;
+                        }
+                        sendCommand(output, messageToSend.getBody());
+                        awnser = ServerAwnser.readAwnser(input);
+                        if(!awnser.getCode().equals("250")){
+                            //TODO error DATA
+                            break;
+                        }
+                        sendCommand(output, "QUIT");
+                        changeServer = true;
+                        state = ClientState.CONNECTION;
                         break;
-                    }
-                    sendCommand(output, "QUIT");
-                    state = ClientState.CONNECTION;
-                    break;
-                case MAILING:
-                    awnser = ServerAwnser.readAwnser(input);
-                    if(!awnser.getCode().equals("250")){
-                        //TODO error réponse a MAIL
+                    case MAILING:
+                        awnser = ServerAwnser.readAwnser(input);
+                        if(!awnser.getCode().equals("250")){
+                            //TODO error réponse a MAIL
+                            break;
+                        }
+
+                        int tryRCPT = 0;
+                        for(String rcpt: serverRcpt.getValue()){
+                            sendCommand(output, "RCPT TO:<"+rcpt+"@"+server+">");
+
+                            awnser = ServerAwnser.readAwnser(input);
+                            switch (awnser.getCode()){
+                                case "250":
+                                    tryRCPT++;
+                                    break;
+                                case "550":
+                                    //TODO aficher erreur (utilisateur inconu ou autre)
+                                    break;
+                            }
+                        }
+                        if(tryRCPT > 0 ){
+                            sendCommand(output, "DATA");
+                            state = ClientState.DATA;
+                        }
+
                         break;
-                    }
-
-                    int tryRCPT = 0;
-                    for(String rcpt: serverRcpt.getValue()){
-                        sendCommand(output, "RCPT TO:<"+rcpt+"@"+server+">");
-
+                    case WAITING:
+                        awnser = ServerAwnser.readAwnser(input);
+                        if(!awnser.getCode().equals("250")){
+                            //TODO error management
+                            break;
+                        }
+                        sendCommand(output,"MAIL FROM:<" + user+ "@" + domaine + ">\r\n");
+                        state = ClientState.MAILING;
+                        break;
+                    case CONNECTION:
                         awnser = ServerAwnser.readAwnser(input);
                         switch (awnser.getCode()){
-                            case "250":
-                                tryRCPT++;
+                            case "220":
+                                //Envoi de EHLO
+                                sendCommand(output,"EHLO " + domaine + "\r\n");
+                                state = ClientState.WAITING;
                                 break;
-                            case "550":
-                                //TODO aficher erreur (utilisateur inconu ou autre)
-                                break;
+                            case "221":
+                                try {
+                                    connection.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                continue;
+                            default:
+                                //TODO error management
                         }
-                    }
-                    if(tryRCPT > 0 ){
-                        sendCommand(output, "DATA");
-                        state = ClientState.DATA;
-                    }
 
-                    break;
-                case WAITING:
-                    awnser = ServerAwnser.readAwnser(input);
-                    if(!awnser.getCode().equals("250")){
-                        //TODO error management
+
                         break;
-                    }
-                    sendCommand(output,"MAIL FROM:<" + user+ "@" + domaine + ">\r\n");
-                    state = ClientState.MAILING;
-                    break;
-                case CONNECTION:
-                    awnser = ServerAwnser.readAwnser(input);
-                    switch (awnser.getCode()){
-                        case "220":
-                            //Envoi de EHLO
-                            sendCommand(output,"EHLO " + domaine + "\r\n");
-                            state = ClientState.WAITING;
-                            break;
-                        case "221":
-                            try {
-                                connection.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            continue;
-                        default:
-                            //TODO error management
-                    }
-
-
-                    break;
+                }
             }
+
 
 
 
@@ -133,8 +136,9 @@ public class Client {
     }
 
     private static boolean sendCommand(BufferedWriter output, String command){
+        System.out.println(command);
         try {
-            output.write(command);
+            output.write(command+"\r\n");
             output.flush();
         } catch (IOException e) {
 

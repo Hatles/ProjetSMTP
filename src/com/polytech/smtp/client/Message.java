@@ -38,6 +38,10 @@ public class Message {
      * @param eMailReceipt Destinataire sous le format user@server:port
      */
     public void addRecipient(String eMailReceipt){
+        if(this.recipient == null){
+            this.recipient = new HashMap<>();
+        }
+
         String[]datas = eMailReceipt.split("@");
         if(!this.recipient.containsKey(datas[1])){
             this.recipient.put(datas[1],new LinkedList<>());

@@ -22,7 +22,7 @@ public class ServerAwnser {
                 e.printStackTrace();
                 break;
             }
-        }while(data.length()>=0);
+        }while(data.length()>0);
         ServerAwnser awnser = new ServerAwnser();
         awnser.code  = sb.substring(0,3);
         awnser.infos = sb.substring(3);

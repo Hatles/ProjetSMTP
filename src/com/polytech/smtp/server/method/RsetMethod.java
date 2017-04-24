@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class RsetMethod extends SMTPMethod {
 
-    public MailMethod() {
+    public RsetMethod() {
         super("RSET");
     }
 

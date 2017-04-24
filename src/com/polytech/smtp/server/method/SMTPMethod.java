@@ -40,7 +40,11 @@ public abstract class SMTPMethod extends MethodCommand
         this.send("501 syntax error in parameters or arguments");
     }
 
-    public void send550() throws IOException {
+    public void send550Mail() throws IOException {
         this.send("550 Requested action not taken: mailbox unavailable");
+    }
+
+    public void send550Rcpt() throws IOException {
+        this.send("550 no such user here");
     }
 }

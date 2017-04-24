@@ -20,8 +20,6 @@ public class MailMethod extends SMTPMethod {
 
     @Override
     public boolean processCommand(List<String> lines) {
-        if (communication.getName().isEmpty() && communication)
-            return false;
         for (String line : lines) {
             String[] mail = line.split(":");
             if (mail.length != 2) {

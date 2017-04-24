@@ -20,9 +20,6 @@ public class RcptMethod extends SMTPMethod {
 
     @Override
     public boolean processCommand(List<String> lines) {
-        if (communication.getName().isEmpty())
-            return false;
-
         for (String line : lines) {
             String[] rcpt = line.split(":");
             if (rcpt.length != 2) {

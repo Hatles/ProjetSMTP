@@ -1,9 +1,7 @@
 package com.polytech.smtp.server.factory;
 
 import com.polytech.smtp.server.SMTPCommunication;
-import com.polytech.smtp.server.method.ConnectionMethod;
-import com.polytech.smtp.server.method.Method;
-import com.polytech.smtp.server.method.NoopMethod;
+import com.polytech.smtp.server.method.*;
 import com.polytech.smtp.server.status.Status;
 
 /**
@@ -16,20 +14,29 @@ public class SMTPCommunicationFactory implements CommunicationFactory {
     {
         Method connection = new ConnectionMethod();
         Method noop = new NoopMethod();
-//        Method rset = new RESTMethod();
+        Method mail = new MailMethod();
+        Method rcpt = new RcptMethod();
+        Method rset = new RsetMethod();
+        Method quit = new QuitMethod();
 
         Status authorization = new Status("authorization");
         authorization.addMethod(connection);
         authorization.addMethod(noop);
+        authorization.addMethod(quit);
 
         Status waitingMail = new Status("waiting_mail");
-        authorization.addMethod(noop);
+        waitingMail.addMethod(noop);
+        waitingMail.addMethod(mail);
+        waitingMail.addMethod(quit);
 
         Status waitingData = new Status("waiting_data");
-        authorization.addMethod(noop);
+        waitingData.addMethod(noop);
+        waitingData.addMethod(rcpt);
+        waitingData.addMethod(rset);
 
         Status receive = new Status("receive");
-        authorization.addMethod(noop);
+        receive.addMethod(noop);
+        receive.addMethod(rset);
 
         communication.addStatus(authorization);
         communication.addStatus(waitingMail);

@@ -14,7 +14,7 @@ public class NoopMethod extends SMTPMethod {
     @Override
     public boolean processCommand(List<String> lines) {
         try {
-            send250("OK");
+            send250(" OK");
             return true;
         } catch (IOException e) {
             log(e.getMessage());

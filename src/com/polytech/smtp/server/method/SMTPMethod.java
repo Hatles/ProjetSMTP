@@ -29,7 +29,7 @@ public abstract class SMTPMethod extends MethodCommand
     }
 
     public void send250(String message) throws IOException {
-        this.send("250 "+message);
+        this.send("250"+message);
     }
 
     public void send500() throws IOException {

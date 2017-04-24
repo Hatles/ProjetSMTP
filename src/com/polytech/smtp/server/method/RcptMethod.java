@@ -47,7 +47,7 @@ public class RcptMethod extends SMTPMethod {
                     Matcher email = p.matcher(rcpt[1]);
                     User user = Stockage.getInstance().getUserBank().getUser(email.group(0));
                     Mailer.getInstance().to(user.getName());
-                    send250("OK");
+                    send250(" OK");
                     return true;
                 } catch (Exception e) {
                     try {

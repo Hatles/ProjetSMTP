@@ -48,7 +48,7 @@ public class MailMethod extends SMTPMethod {
                     User user =Stockage.getInstance().getUserBank().getUser(email.group(0));
                     Mailer.getInstance().from(user.getName());
                     communication.setStatus("waiting_data");
-                    send250("OK");
+                    send250(" OK");
                     return true;
                 } catch (Exception e) {
                     try {

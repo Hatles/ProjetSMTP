@@ -63,4 +63,11 @@ public class Mailer
     {
         this.data.append(data);
     }
+
+    public void reset()
+    {
+        from = null;
+        to = new ArrayList<>();
+        data = new StringBuilder();
+    }
 }

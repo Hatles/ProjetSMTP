@@ -37,7 +37,7 @@ public class MailMethod extends SMTPMethod {
                 boolean syntaxtTest = mail[1].matches("<\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*\\.(?:[a-z]{2,4})>");
                 if (syntaxtTest) {
                     try {
-                        send501();
+                        send500();
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
                     }

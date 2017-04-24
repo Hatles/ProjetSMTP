@@ -64,6 +64,7 @@ public class MailMethod extends SMTPMethod {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                return false;
             }
         }
         return false;

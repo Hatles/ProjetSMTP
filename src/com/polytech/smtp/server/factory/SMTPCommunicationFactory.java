@@ -16,8 +16,8 @@ public class SMTPCommunicationFactory implements CommunicationFactory {
         Method noop = new NoopMethod();
         Method mail = new MailMethod();
         Method rcpt = new RcptMethod();
+        Method rset = new RsetMethod();
         Method quit = new QuitMethod();
-//        Method rset = new RESTMethod();
 
         Status authorization = new Status("authorization");
         authorization.addMethod(connection);
@@ -25,16 +25,18 @@ public class SMTPCommunicationFactory implements CommunicationFactory {
         authorization.addMethod(quit);
 
         Status waitingMail = new Status("waiting_mail");
-        authorization.addMethod(noop);
-        authorization.addMethod(mail);
-        authorization.addMethod(quit);
+        waitingMail.addMethod(noop);
+        waitingMail.addMethod(mail);
+        waitingMail.addMethod(quit);
 
         Status waitingData = new Status("waiting_data");
-        authorization.addMethod(noop);
-        authorization.addMethod(rcpt);
+        waitingData.addMethod(noop);
+        waitingData.addMethod(rcpt);
+        waitingData.addMethod(rset);
 
         Status receive = new Status("receive");
-        authorization.addMethod(noop);
+        receive.addMethod(noop);
+        receive.addMethod(rset);
 
         communication.addStatus(authorization);
         communication.addStatus(waitingMail);

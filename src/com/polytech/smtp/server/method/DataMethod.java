@@ -34,7 +34,7 @@ public class DataMethod extends SMTPMethod
                 lastLineDot = lineDot;
             }
 
-//            Stockage.getInstance().addMessage(mailer.getFrom(), mailer.);
+            Stockage.getInstance().addMessage(mailer.getFrom(), mailer.getTo(), mailer.getData());
         }
         else
         {

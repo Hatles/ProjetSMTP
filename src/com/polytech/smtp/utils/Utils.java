@@ -163,6 +163,17 @@ public class Utils
         msg += ".\r\n";
         return msg;
 	}
+	
+//	public static Message buildMessage(String data)
+//	{
+//	    Message message = new Message();
+//	    String[] lines = data.split("\r\n");
+//
+//		for (int i = 0; i < ; i++) {
+//
+//		}
+//		return
+//	}
 
 	public static String bytesToHex(byte[] bytes) {
 		char[] hexArray = "0123456789ABCDEF".toCharArray();

@@ -2,6 +2,7 @@ package com.polytech.smtp.server.stockage;
 
 
 import com.polytech.smtp.server.Server;
+import com.polytech.smtp.utils.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -79,6 +80,6 @@ public class Stockage
 
     public void addMessage(String from, List<String> to, String data)
     {
-
+        Message message = Utils.buildMessage(data);
     }
 }

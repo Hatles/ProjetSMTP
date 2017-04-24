@@ -15,7 +15,7 @@ abstract class CommunicationRunnable extends ServerRunnable implements Communica
     private Socket socket;
 
     private BufferedReader in;
-    private DataOutputStream out;
+    private OutputStreamWriter out;
 
     private boolean firstLoop;
 
@@ -34,7 +34,7 @@ abstract class CommunicationRunnable extends ServerRunnable implements Communica
     {
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-            out = new DataOutputStream(socket.getOutputStream());
+            out = new OutputStreamWriter(new BufferedOutputStream(socket.getOutputStream()), "UTF-8");
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -137,28 +137,6 @@ abstract class CommunicationRunnable extends ServerRunnable implements Communica
 
     protected abstract void onClose();
 
-    public void writeData(File file) throws IOException
-    {
-        log("Start log data");
-        FileInputStream fea;
-        try
-        {
-            fea = new FileInputStream(file);
-            int content;
-            while((content = fea.read()) != -1)
-            {
-                out.writeByte(content);
-            }
-            fea.close();
-            //out.writeByte(-1);
-        } catch (FileNotFoundException e)
-        {
-            log(e.getMessage());
-            e.printStackTrace();
-        }
-        log("End log data");
-    }
-
     public void writeLine(String message) throws IOException
     {
         write(message+"\r\n");//CR LF
@@ -166,7 +144,7 @@ abstract class CommunicationRunnable extends ServerRunnable implements Communica
 
     public void write(String message) throws IOException
     {
-        out.writeUTF(message);
+        out.write(message);
     }
 
     public void send(String message) throws IOException

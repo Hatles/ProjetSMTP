@@ -105,8 +105,10 @@ public class SMTPCommunication extends CommunicationRunnable
     {
         this.statusMap.remove(status);
     }
+
     public void removeStatus(String status)
     {
+
         this.statusMap.remove(status);
     }
 
@@ -119,6 +121,7 @@ public class SMTPCommunication extends CommunicationRunnable
     public void setStatus(Status status)
     {
         this.status = status;
+        log("Status change to : "+status.getName());
     }
 
     public void setStatus(String status)

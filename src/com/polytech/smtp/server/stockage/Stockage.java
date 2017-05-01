@@ -80,6 +80,6 @@ public class Stockage
 
     public void addMessage(String from, List<String> to, String data)
     {
-        Message message = Utils.buildMessage(data);
+        //Message message = Utils.buildMessage(data);
     }
 }

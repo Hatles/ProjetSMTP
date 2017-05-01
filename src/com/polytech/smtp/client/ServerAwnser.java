@@ -16,23 +16,14 @@ public class ServerAwnser {
         StringBuilder sb = new StringBuilder();
 
         String data;
-        int readByte;
         try {
-        while(input.ready()){
-
-
+            while(input.ready()){
                 data = input.readLine();
-                //readByte = input.readLine();
-                //Stream<String> lines = input.lines();
                 sb.append(data);
-
-
-        }
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            //break;
         }
-
         ServerAwnser awnser = new ServerAwnser();
         awnser.code  = sb.substring(0,3);
         awnser.infos = sb.substring(3);

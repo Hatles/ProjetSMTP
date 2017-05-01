@@ -6,6 +6,7 @@ import com.polytech.smtp.server.status.Status;
 import com.polytech.smtp.server.stockage.Stockage;
 import com.polytech.smtp.utils.Utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
@@ -143,4 +144,8 @@ public class SMTPCommunication extends CommunicationRunnable
         return server.getServerName();
     }
 
+    @Override
+    public void writeData(File file) throws IOException {
+        //TODO
+    }
 }

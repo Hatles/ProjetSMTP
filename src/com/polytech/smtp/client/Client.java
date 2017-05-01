@@ -42,8 +42,8 @@ public class Client {
                     case BUILD:
                         try {
                             connection = new Socket(server, port);
-                            input = new BufferedReader(new InputStreamReader(connection.getInputStream(),"UTF-8"));
-                            output = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"));
+                            input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                            output = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

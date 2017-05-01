@@ -2,6 +2,10 @@ package com.polytech.smtp.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class ServerAwnser {
@@ -12,17 +16,23 @@ public class ServerAwnser {
         StringBuilder sb = new StringBuilder();
 
         String data;
-        do{
-            try {
+        int readByte;
+        try {
+        while(input.ready()){
+
+
                 data = input.readLine();
+                //readByte = input.readLine();
+                //Stream<String> lines = input.lines();
+                sb.append(data);
 
-                sb.append(data +" ");
 
-            } catch (IOException e) {
-                e.printStackTrace();
-                break;
-            }
-        }while(data.length()>0);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            //break;
+        }
+
         ServerAwnser awnser = new ServerAwnser();
         awnser.code  = sb.substring(0,3);
         awnser.infos = sb.substring(3);

@@ -21,43 +21,40 @@ public class RcptMethod extends SMTPMethod {
     @Override
     public boolean processCommand(List<String> lines) {
         for (String line : lines) {
-            String[] rcpt = line.split(":");
-            if (rcpt.length != 2) {
-                try {
-                    send500();
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                }
-                return false;
-            }
-
-            if (rcpt[0].equals("RCPT TO")) {
-                boolean syntaxtTest = rcpt[1].matches("<\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*\\.(?:[a-z]{2,4})>");
-                if (syntaxtTest) {
-                    try {
-                        send500();
-                    } catch (IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-                    return false;
+            try {
+                String[] rcpt = line.split(":");
+                if (rcpt.length != 2) {
+                    throw new IOException();
                 }
 
-                try {
-                    Pattern p = Pattern.compile("\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*\\.(?:[a-z]{2,4})");
-                    Matcher email = p.matcher(rcpt[1]);
-                    User user = Stockage.getInstance().getUserBank().getUser(email.group(0));
-                    Mailer.getInstance().to(user.getName());
-                    send250(" OK");
-                    return true;
-                } catch (Exception e) {
-                    try {
-                        send550Rcpt();
-                    } catch (IOException er) {
-                        er.printStackTrace();
+                if (rcpt[0].equals("RCPT TO")) {
+                    boolean syntaxtTest = rcpt[1].matches("<\\w(?:[-_.]?\\w)*@\\w(?:[-_.:]?\\w)*>");
+                    if (!syntaxtTest) {
+                        throw new IOException();
                     }
-                    return false;
+
+                    try {
+                        String[] email = rcpt[1].split("@");
+                        String username = email[0].replace("<", "");
+                        String servername = email[1].replace(">", "");
+                        if (!servername.equals(communication.getServerName()))
+                            throw new Exception();
+                        User user = Stockage.getInstance().getUserBank().getUser(username);
+                        Mailer.getInstance().to(user.getName());
+                        send250(" OK");
+                        return true;
+                    } catch (Exception e) {
+                        try {
+                            send550Rcpt();
+                        } catch (IOException er) {
+                            er.printStackTrace();
+                        }
+                        return false;
+                    }
+                } else {
+                    throw new IOException();
                 }
-            } else {
+            } catch (IOException ioe) {
                 try {
                     send500();
                 } catch (IOException e) {

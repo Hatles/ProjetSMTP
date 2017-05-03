@@ -33,7 +33,7 @@ public class MailMethod extends SMTPMethod {
 
             if (mail[0].equals("MAIL FROM")) {
                 boolean syntaxtTest = mail[1].matches("<\\w(?:[-_.]?\\w)*@\\w(?:[-_.:]?\\w)*>");
-                if (syntaxtTest) {
+                if (!syntaxtTest) {
                     try {
                         send500();
                     } catch (IOException ioe) {
@@ -43,9 +43,11 @@ public class MailMethod extends SMTPMethod {
                 }
 
                 try {
-                    String username = mail[1].split("@")[0].replace("<","");
-                    User user = Stockage.getInstance().getUserBank().getUser(username);
-                    Mailer.getInstance().from(user.getName());
+                    //String[] email = mail[1].split("@");
+                   // String username = email[0].replace("<","");
+                   // User user = Stockage.getInstance().getUserBank().getUser(username);
+                   // Mailer.getInstance().from(user.getName());
+                    Mailer.getInstance().from(mail[1].replace("<","").replace(">",""));
                     communication.setStatus("waiting_data");
                     send250("OK");
                     return true;

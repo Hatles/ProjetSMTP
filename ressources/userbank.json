@@ -8,7 +8,7 @@
           "headers": [
             {
               "title": "From",
-              "value": "coco <coco@coco.coco>"
+              "value": "coco <coco@toto.toto>"
             },
             {
               "title": "To",
@@ -29,7 +29,7 @@
           "headers": [
             {
               "title": "From",
-              "value": "fgd <coco@coco.coco>"
+              "value": "fgd <coco@toto.toto>"
             },
             {
               "title": "To",
@@ -50,7 +50,7 @@
           "headers": [
             {
               "title": "From",
-              "value": "coco <coco@coco.coco>"
+              "value": "coco <toto@toto.toto>"
             },
             {
               "title": "To",

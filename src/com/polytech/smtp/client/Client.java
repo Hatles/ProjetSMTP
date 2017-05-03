@@ -74,7 +74,7 @@ public class Client {
 
                         int tryRCPT = 0;
                         for(String rcpt: serverRcpt.getValue()){
-                            sendCommand(output, "RCPT TO:<"+rcpt+"@"+server+">");
+                            sendCommand(output, "RCPT TO:<"+rcpt+"@"+server+">\r\n");
 
                             awnser = ServerAwnser.readAwnser(input);
                             switch (awnser.getCode()){

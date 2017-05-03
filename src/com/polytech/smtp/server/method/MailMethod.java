@@ -43,10 +43,7 @@ public class MailMethod extends SMTPMethod {
                 }
 
                 try {
-                    Pattern p = Pattern.compile("\\w(?:[-_.]?\\w)*@\\w(?:[-_.:]?\\w)*");
-                    Matcher email = p.matcher(mail[1]);
-                    String maila = email.group(0);
-                    String username = maila.split("@")[0];
+                    String username = mail[1].split("@")[0].replace("<","");
                     User user = Stockage.getInstance().getUserBank().getUser(username);
                     Mailer.getInstance().from(user.getName());
                     communication.setStatus("waiting_data");

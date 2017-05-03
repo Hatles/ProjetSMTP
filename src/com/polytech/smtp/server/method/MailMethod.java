@@ -32,7 +32,7 @@ public class MailMethod extends SMTPMethod {
             }
 
             if (mail[0].equals("MAIL FROM")) {
-                boolean syntaxtTest = mail[1].matches("<\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*\\.(?:[a-z]{2,4})>");
+                boolean syntaxtTest = mail[1].matches("<\\w(?:[-_.]?\\w)*@\\w(?:[-_.:]?\\w)*>");
                 if (syntaxtTest) {
                     try {
                         send500();
@@ -43,7 +43,7 @@ public class MailMethod extends SMTPMethod {
                 }
 
                 try {
-                    Pattern p = Pattern.compile("\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*");
+                    Pattern p = Pattern.compile("\\w(?:[-_.]?\\w)*@\\w(?:[-_.:]?\\w)*");
                     Matcher email = p.matcher(mail[1]);
                     String maila = email.group(0);
                     String username = maila.split("@")[0];

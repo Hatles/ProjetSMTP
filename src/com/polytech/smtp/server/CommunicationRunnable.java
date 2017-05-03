@@ -79,7 +79,7 @@ abstract class CommunicationRunnable extends ServerRunnable implements Communica
                 else if(!head)
                 {
                     nullLine++;
-                    if(nullLine > 1)
+                    if(nullLine >= 1)
                         reading = false;
                     else lines.add(line);
                 }

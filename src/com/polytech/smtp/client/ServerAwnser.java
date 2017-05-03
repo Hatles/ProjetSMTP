@@ -17,10 +17,11 @@ public class ServerAwnser {
 
         String data;
         try {
-            while(input.ready()){
+            do{
                 data = input.readLine();
                 sb.append(data);
             }
+            while(input.ready());
         } catch (Exception e) {
             e.printStackTrace();
         }

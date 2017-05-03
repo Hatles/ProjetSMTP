@@ -31,7 +31,7 @@ public class ConnectionMethod extends SMTPMethod
 
                 try {
                     communication.clientConnected(name);
-                    send250("-"+communication.getServerName()+" greets "+name);
+                    send250(communication.getServerName()+" greets "+name);
                 } catch (Exception e){
                     try {
                         send500();

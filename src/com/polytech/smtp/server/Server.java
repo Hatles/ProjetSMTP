@@ -34,7 +34,7 @@ public class Server extends Observable
 		running = false;
 		accept = new AcceptClient(this);
 		clients = new ArrayList<CommunicationRunnable>();
-		name = "POP3S_ToupieLicorne_v0.95";
+		name = "SMTP_ToupieLicorne_v0.95";
 		rootDir = new File(System.getProperty("user.home"));
 
 		dateFormat = new SimpleDateFormat("[HH:mm:ss]");

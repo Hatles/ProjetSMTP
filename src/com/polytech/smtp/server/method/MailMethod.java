@@ -21,7 +21,7 @@ public class MailMethod extends SMTPMethod {
     @Override
     public boolean processCommand(List<String> lines) {
         for (String line : lines) {
-            String[] mail = line.split(":");
+            String[] mail = line.split(":", 2);
             if (mail.length != 2) {
                 try {
                     send500();
@@ -43,14 +43,17 @@ public class MailMethod extends SMTPMethod {
                 }
 
                 try {
-                    Pattern p = Pattern.compile("\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*\\.(?:[a-z]{2,4})");
+                    Pattern p = Pattern.compile("\\w(?:[-_.]?\\w)*@\\w(?:[-_.]?\\w)*");
                     Matcher email = p.matcher(mail[1]);
-                    User user =Stockage.getInstance().getUserBank().getUser(email.group(0));
+                    String maila = email.group(0);
+                    String username = maila.split("@")[0];
+                    User user = Stockage.getInstance().getUserBank().getUser(username);
                     Mailer.getInstance().from(user.getName());
                     communication.setStatus("waiting_data");
-                    send250(" OK");
+                    send250("OK");
                     return true;
                 } catch (Exception e) {
+                    e.printStackTrace();
                     try {
                         send550Mail();
                     } catch (IOException er) {

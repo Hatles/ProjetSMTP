@@ -120,10 +120,10 @@
           <component id="51596" class="javax.swing.JLabel">
             <constraints border-constraint="North"/>
             <properties>
-              <text value="Errors"/>
+              <text value="Out"/>
             </properties>
           </component>
-          <component id="1573e" class="javax.swing.JTextArea" binding="textErrors">
+          <component id="1573e" class="javax.swing.JTextArea" binding="textOut">
             <constraints border-constraint="Center"/>
             <properties>
               <preferredSize width="100" height="100"/>

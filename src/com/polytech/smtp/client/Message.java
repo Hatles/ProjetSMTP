@@ -34,19 +34,23 @@ public class Message {
     }
 
     /**
-     *
      * @param eMailReceipt Destinataire sous le format user@server:port
      */
-    public void addRecipient(String eMailReceipt){
+    public void addRecipient(String eMailReceipt) throws Exception {
         if(this.recipient == null){
             this.recipient = new HashMap<>();
         }
 
         String[]datas = eMailReceipt.split("@");
-        if(!this.recipient.containsKey(datas[1])){
-            this.recipient.put(datas[1],new LinkedList<>());
+
+        if(datas.length > 0) {
+            if (!this.recipient.containsKey(datas[1])) {
+                this.recipient.put(datas[1], new LinkedList<>());
+            }
+            this.recipient.get(datas[1]).add(datas[0]);
+        } else {
+            throw new Exception("Recipients must be addes like this : name@server:port;name2@server:port[...]");
         }
-        this.recipient.get(datas[1]).add(datas[0]);
     }
 
     public String getBody() {

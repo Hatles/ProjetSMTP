@@ -20,7 +20,7 @@ public class ConstructionMail extends JFrame{
     private JButton btnSend;
     private JTextField txtSubject;
     private JPanel panError;
-    private JTextArea textErrors;
+    private JTextArea textOut;
 
     public ConstructionMail() {
         btnSend.addActionListener(new ActionListener() {
@@ -33,13 +33,19 @@ public class ConstructionMail extends JFrame{
                 myMessage.setDate(new Date());
 
                 String [] rcpts = txtRcpt.getText().trim().split(";");
-                for(String rcpt : rcpts){
-                    myMessage.addRecipient(rcpt);
+
+                try {
+
+                    for(String rcpt : rcpts){
+                        myMessage.addRecipient(rcpt);
+                    }
+
+                } catch (Exception e1) {
+                    textOut.setText(e1.getMessage());
                 }
 
-
-                Client myClient = new Client(myMessage,txtUser.getText(),txtDomaine.getText());
-                textErrors.setText(myClient.run());
+                Client myClient = new Client(myMessage, txtUser.getText(), txtDomaine.getText());
+                textOut.setText(myClient.run());
             }
         });
     }

@@ -80,6 +80,25 @@ public class Stockage
 
     public void addMessage(String from, List<String> to, String data)
     {
-        //Message message = Utils.buildMessage(data);
+        System.out.println("send msg : "+data);
+        Message message = Utils.buildMessage(data);
+
+        UserBank bank = this.getUserBank();
+        try {
+            User fUser = bank.getUser(from);
+
+            for (String t :to) {
+                User tUser = bank.getUser(t);
+                tUser.addMessage(message);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        this.save();
+    }
+
+    private void save() {
+        System.out.println("saving json");
     }
 }

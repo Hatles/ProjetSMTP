@@ -27,14 +27,13 @@ public class DataReceiveMethod extends SMTPMethod
         Mailer mailer = Mailer.getInstance();
         if(mailer.hasRcpt())
         {
-            boolean lastLineDot = false;
+            boolean end = false;
             for (String line : lines) {
-                boolean lineDot = line.equals(".");
 
-                if(!lineDot)
+                if(!line.equals("."))
                     mailer.data(line);
-
-                if(lastLineDot){
+                else
+                {
                     Stockage.getInstance().addMessage(mailer.getFrom(), mailer.getTo(), mailer.getData());
                     communication.setStatus("waiting_mail");
                     try {
@@ -42,13 +41,19 @@ public class DataReceiveMethod extends SMTPMethod
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    end = true;
                     break;
                 }
-
-                lastLineDot = lineDot;
             }
 
-
+            if(!end)
+            {
+                try {
+                    send250("OK");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
         else

@@ -61,7 +61,7 @@ public class Mailer
 
     public void data(String data)
     {
-        this.data.append(data);
+        this.data.append(data+"\r\n");
     }
 
     public void reset()

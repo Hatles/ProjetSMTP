@@ -1,5 +1,8 @@
 package com.polytech.smtp.server.stockage;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,5 +38,19 @@ public class UserBank {
                 return user;
         }
         throw new Exception("User "+name+" doesn't have account.");
+    }
+
+    public JSONObject toJson()
+    {
+        JSONObject obj = new JSONObject();
+        JSONArray list = new JSONArray();
+        for(User user : users)
+        {
+            list.add(user.toJson());
+        }
+
+        obj.put("users", list);
+
+        return obj;
     }
 }

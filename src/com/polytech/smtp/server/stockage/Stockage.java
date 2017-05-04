@@ -8,6 +8,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,9 +87,9 @@ public class Stockage
 
         UserBank bank = this.getUserBank();
         try {
-            User fUser = bank.getUser(from);
+            //User fUser = bank.getUser(from);
 
-            for (String t :to) {
+            for (String t : to) {
                 User tUser = bank.getUser(t);
                 tUser.addMessage(message);
             }
@@ -95,10 +97,19 @@ public class Stockage
             e.printStackTrace();
         }
 
-        this.save();
+        this.save(bank);
     }
 
-    private void save() {
+    private void save(UserBank userBank) {
+        JSONObject bank = userBank.toJson();
         System.out.println("saving json");
+        try (FileWriter file = new FileWriter(server.getRootDir())) {
+            file.write(bank.toJSONString());
+            System.out.println("Successfully Copied JSON Object to File...");
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

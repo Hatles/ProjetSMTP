@@ -57,7 +57,7 @@ public class Client {
                             //TODO error DATA
                             break;
                         }
-                        sendCommand(output, messageToSend.getBody());
+                        sendCommand(output, messageToSend.toMailDATA(user));
                         awnser = ServerAwnser.readAwnser(input);
                         if(!awnser.getCode().equals("250")){
                             //TODO error DATA
@@ -134,7 +134,7 @@ public class Client {
     private static boolean sendCommand(BufferedWriter output, String command){
         System.out.println(command);
         try {
-            output.write(command+"\r\n");
+            output.write(command+"\r\n\r\n");
             output.flush();
         } catch (IOException e) {
 

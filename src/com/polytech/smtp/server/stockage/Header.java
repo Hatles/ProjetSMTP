@@ -1,5 +1,8 @@
 package com.polytech.smtp.server.stockage;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 /**
  * Created by kifkif on 13/03/2017.
  */
@@ -32,5 +35,14 @@ public class Header {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public JSONObject toJson() {
+        JSONObject obj = new JSONObject();
+
+        obj.put("title", title);
+        obj.put("value", value);
+
+        return obj;
     }
 }

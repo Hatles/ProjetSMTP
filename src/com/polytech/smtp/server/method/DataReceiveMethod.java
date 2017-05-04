@@ -28,33 +28,71 @@ public class DataReceiveMethod extends SMTPMethod
         if(mailer.hasRcpt())
         {
             boolean end = false;
-            for (String line : lines) {
-
+            boolean lastLineEmpty = false;
+            boolean lastLineDot = false;
+            int i = 1;
+            for (String line : lines)
+            {
                 if(!line.equals("."))
-                    mailer.data(line);
+                {
+                    if(line.equals(""))
+                    {
+                        mailer.data("");
+                        lastLineEmpty = true;
+                    }
+                    else
+                    {
+                        lastLineEmpty = false;
+
+                        if(lastLineDot)
+                        {
+                            mailer.data(".");
+                            lastLineDot = false;
+                        }
+                        mailer.data(line);
+                    }
+                }
                 else
                 {
+                    if(!lastLineDot)
+                    {
+                        lastLineDot = true;
+                        lastLineEmpty = true;
+                    }
+                }
+            }
+
+            if(lastLineDot)
+            {
+                if(lastLineEmpty)
+                {
                     Stockage.getInstance().addMessage(mailer.getFrom(), mailer.getTo(), mailer.getData());
+                    Mailer.getInstance().reset();
                     communication.setStatus("waiting_mail");
                     try {
                         send250("OK");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    end = true;
-                    break;
                 }
+                else
+                {
+                    try {
+                        send250("OK");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return true;
             }
-
-            if(!end)
+            else
             {
                 try {
-                    send250("OK");
+                    send500();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         else
         {

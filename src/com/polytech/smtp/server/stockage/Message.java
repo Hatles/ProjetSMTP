@@ -1,5 +1,8 @@
 package com.polytech.smtp.server.stockage;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +48,22 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public JSONObject toJson() {
+        JSONObject obj = new JSONObject();
+
+        obj.put("message", message);
+
+        JSONArray list = new JSONArray();
+        for(Header header : headers)
+        {
+            list.add(header.toJson());
+        }
+
+
+        obj.put("headers", list);
+
+        return obj;
     }
 }

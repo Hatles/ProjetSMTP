@@ -1,5 +1,8 @@
 package com.polytech.smtp.server.stockage;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.List;
 
 /**
@@ -50,5 +53,23 @@ public class User
     public void addMessage(Message message)
     {
         this.messages.add(message);
+    }
+
+    public JSONObject toJson() {
+        JSONObject obj = new JSONObject();
+
+        obj.put("name", name);
+        obj.put("control", control);
+
+        JSONArray list = new JSONArray();
+        for(Message message : messages)
+        {
+            list.add(message.toJson());
+        }
+
+
+        obj.put("messages", list);
+
+        return obj;
     }
 }

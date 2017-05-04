@@ -50,7 +50,7 @@ public class Message {
     }
 
     public String getBody() {
-        return body+".\r\n";
+        return body;
     }
 
     public void setBody(String body) {

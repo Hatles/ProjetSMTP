@@ -83,11 +83,12 @@ public class Client {
                                     break;
                                 case "550":
                                     //TODO aficher erreur (utilisateur inconu ou autre)
+                                    changeServer = true;
                                     break;
                             }
                         }
                         if(tryRCPT > 0 ){
-                            sendCommand(output, "DATA");
+                            sendCommand(output, "DATA\r\n");
                             state = ClientState.DATA;
                         }
 

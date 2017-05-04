@@ -24,7 +24,9 @@ public class Client {
 
     }
 
-    public void run(){
+
+    public String run(){
+        String viewMessage = "test";
         for(Map.Entry<String, LinkedList<String>> serverRcpt : this.messageToSend.getRecipient().entrySet()){ // Pour chaque serveur dans les destinataires
             String [] serverInfo = serverRcpt.getKey().split(":");
             String server = serverInfo[0];
@@ -64,6 +66,7 @@ public class Client {
                         sendCommand(output, "QUIT");
                         changeServer = true;
                         state = ClientState.CONNECTION;
+
                         break;
                     case MAILING:
                         awnser = ServerAwnser.readAwnser(input);
@@ -120,20 +123,12 @@ public class Client {
                             default:
                                 //TODO error management
                         }
-
-
                         break;
                 }
             }
-
-
-
-
             //connection réussie
-
-
-
         }
+        return viewMessage;
     }
 
     private static boolean sendCommand(BufferedWriter output, String command){

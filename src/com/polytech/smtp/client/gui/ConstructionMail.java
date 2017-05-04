@@ -39,14 +39,18 @@ public class ConstructionMail extends JFrame{
 
 
                 Client myClient = new Client(myMessage,txtUser.getText(),txtDomaine.getText());
-                myClient.run();
+                textErrors.setText(myClient.run());
             }
         });
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("ConstructionMail");
-        frame.setContentPane(new ConstructionMail().panel1);
+
+        ConstructionMail view = new ConstructionMail();
+
+        frame.setContentPane(view.panel1);
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

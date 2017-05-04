@@ -13,7 +13,11 @@ public class test {
         myMess.setSubject("test");
         myMess.setBody("test");
 
-        myMess.addRecipient("toto@localhost:5555");
+        try {
+            myMess.addRecipient("toto@localhost:5555");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Client myC = new Client(myMess,"toto","localhost:5555");
 

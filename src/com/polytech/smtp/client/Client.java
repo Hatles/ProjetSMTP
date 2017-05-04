@@ -26,7 +26,9 @@ public class Client {
 
 
     public String run(){
-        String viewMessage = "test";
+
+        String viewMessage = "";
+
         for(Map.Entry<String, LinkedList<String>> serverRcpt : this.messageToSend.getRecipient().entrySet()){ // Pour chaque serveur dans les destinataires
             String [] serverInfo = serverRcpt.getKey().split(":");
             String server = serverInfo[0];
@@ -37,41 +39,45 @@ public class Client {
             BufferedReader input = null;
             BufferedWriter output = null;
 
-            ServerAwnser awnser = null;
+            ServerAwnser answer;
             boolean changeServer = false;
+
             while(!changeServer){
+
                 switch (state){
+
                     case BUILD:
                         try {
                             connection = new Socket(server, port);
                             input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                             output = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            viewMessage = "INTERNAL ERROR : " + e.getMessage() + "\n";
                         }
                         state = ClientState.CONNECTION;
                         break;
+
                     case DATA:
-                        awnser = ServerAwnser.readAwnser(input);
-                        if(!awnser.getCode().equals("354")){
-                            //TODO error DATA
+                        answer = ServerAwnser.readAwnser(input);
+                        if(!answer.getCode().equals("354")){
+                            viewMessage = "No correct recipient found\n";
                             break;
                         }
                         sendCommand(output, messageToSend.toMailDATA(user));
-                        awnser = ServerAwnser.readAwnser(input);
-                        if(!awnser.getCode().equals("250")){
-                            //TODO error DATA
+                        answer = ServerAwnser.readAwnser(input);
+                        if(!answer.getCode().equals("250")){
+                            viewMessage = "Fail to send body\n";
                             break;
                         }
                         sendCommand(output, "QUIT");
                         changeServer = true;
-                        state = ClientState.CONNECTION;
-
+                        viewMessage = "SUCCESS";
                         break;
+
                     case MAILING:
-                        awnser = ServerAwnser.readAwnser(input);
-                        if(!awnser.getCode().equals("250")){
-                            //TODO error réponse a MAIL
+                        answer = ServerAwnser.readAwnser(input);
+                        if(!answer.getCode().equals("250")){
+                            viewMessage += "Fail to send MAIL command\n";
                             break;
                         }
 
@@ -79,13 +85,13 @@ public class Client {
                         for(String rcpt: serverRcpt.getValue()){
                             sendCommand(output, "RCPT TO:<"+rcpt+"@"+server+">\r\n");
 
-                            awnser = ServerAwnser.readAwnser(input);
-                            switch (awnser.getCode()){
+                            answer = ServerAwnser.readAwnser(input);
+                            switch (answer.getCode()){
                                 case "250":
                                     tryRCPT++;
                                     break;
                                 case "550":
-                                    //TODO aficher erreur (utilisateur inconu ou autre)
+                                    viewMessage += "Unknown user " + rcpt + "\n";
                                     changeServer = true;
                                     break;
                             }
@@ -94,20 +100,21 @@ public class Client {
                             sendCommand(output, "DATA\r\n");
                             state = ClientState.DATA;
                         }
-
                         break;
+
                     case WAITING:
-                        awnser = ServerAwnser.readAwnser(input);
-                        if(!awnser.getCode().equals("250")){
-                            //TODO error management
+                        answer = ServerAwnser.readAwnser(input);
+                        if(!answer.getCode().equals("250")){
+                            viewMessage += "Server exception detected\n";
                             break;
                         }
                         sendCommand(output,"MAIL FROM:<" + user+ "@" + domaine + ">\r\n");
                         state = ClientState.MAILING;
                         break;
+
                     case CONNECTION:
-                        awnser = ServerAwnser.readAwnser(input);
-                        switch (awnser.getCode()){
+                        answer = ServerAwnser.readAwnser(input);
+                        switch (answer.getCode()){
                             case "220":
                                 //Envoi de EHLO
                                 sendCommand(output,"EHLO " + domaine + "\r\n");
@@ -118,15 +125,17 @@ public class Client {
                                     connection.close();
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                    viewMessage = "INTERNAL ERROR : " + e.getMessage() + "\n";
                                 }
                                 continue;
                             default:
-                                //TODO error management
+                                viewMessage = "INTERNAL ERROR : state not allow in this application\n" +
+                                    "Check Domaines adresses, it should be like this : 'server:port'\n";
+                                changeServer = true;
                         }
                         break;
                 }
             }
-            //connection réussie
         }
         return viewMessage;
     }
@@ -137,7 +146,6 @@ public class Client {
             output.write(command+"\r\n\r\n");
             output.flush();
         } catch (IOException e) {
-
             e.printStackTrace();
             return false;
         }

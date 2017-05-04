@@ -18,25 +18,16 @@ public class DataMethod extends SMTPMethod
     @Override
     public boolean processCommand(List<String> lines)
     {
-        Mailer mailer = Mailer.getInstance();
+       Mailer mailer = Mailer.getInstance();
         if(mailer.hasRcpt())
         {
             communication.setStatus("receive");
-            boolean lastLineDot = false;
-            for (String line : lines) {
-                boolean lineDot = line.equals(".");
-
-                if(!lineDot)
-                    mailer.data(line);
-
-                if(lastLineDot)
-                    break;
-
-                lastLineDot = lineDot;
+            try {
+                send354();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            Stockage.getInstance().addMessage(mailer.getFrom(), mailer.getTo(), mailer.getData());
-            communication.setStatus("waiting_mail");
         }
         else
         {

@@ -32,6 +32,10 @@ public abstract class SMTPMethod extends MethodCommand
         this.send("250 "+message);
     }
 
+    public void send354() throws IOException {
+        this.send("354 Start Mail Input ; end with <CRLF>.<CRLF>");
+    }
+
     public void send500() throws IOException {
         this.send("500 syntax error command unrocognized");
     }

@@ -18,6 +18,8 @@ public class SMTPCommunicationFactory implements CommunicationFactory {
         Method rcpt = new RcptMethod();
         Method rset = new RsetMethod();
         Method quit = new QuitMethod();
+        Method dataReceive = new DataReceiveMethod();
+        Method data = new DataMethod();
 
         Status authorization = new Status("authorization");
         authorization.addMethod(connection);
@@ -33,10 +35,12 @@ public class SMTPCommunicationFactory implements CommunicationFactory {
         waitingData.addMethod(noop);
         waitingData.addMethod(rcpt);
         waitingData.addMethod(rset);
+        waitingData.addMethod(data);
 
         Status receive = new Status("receive");
         receive.addMethod(noop);
         receive.addMethod(rset);
+        receive.addMethod(dataReceive);
 
         communication.addStatus(authorization);
         communication.addStatus(waitingMail);

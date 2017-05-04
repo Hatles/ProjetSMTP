@@ -21,6 +21,7 @@ public class DataMethod extends SMTPMethod
         Mailer mailer = Mailer.getInstance();
         if(mailer.hasRcpt())
         {
+            communication.setStatus("receive");
             boolean lastLineDot = false;
             for (String line : lines) {
                 boolean lineDot = line.equals(".");
@@ -35,6 +36,7 @@ public class DataMethod extends SMTPMethod
             }
 
             Stockage.getInstance().addMessage(mailer.getFrom(), mailer.getTo(), mailer.getData());
+            communication.setStatus("waiting_mail");
         }
         else
         {

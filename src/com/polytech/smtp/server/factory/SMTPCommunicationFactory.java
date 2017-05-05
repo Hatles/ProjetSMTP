@@ -24,11 +24,13 @@ public class SMTPCommunicationFactory implements CommunicationFactory {
         Status authorization = new Status("authorization");
         authorization.addMethod(connection);
         authorization.addMethod(noop);
+        authorization.addMethod(rset);
         authorization.addMethod(quit);
 
         Status waitingMail = new Status("waiting_mail");
         waitingMail.addMethod(noop);
         waitingMail.addMethod(mail);
+        waitingMail.addMethod(rset);
         waitingMail.addMethod(quit);
 
         Status waitingData = new Status("waiting_data");

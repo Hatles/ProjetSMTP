@@ -108,7 +108,7 @@ public class Client extends Observable{
                                     viewMessage += "Unknown user " + rcpt + "\n";
                                     setChanged();
                                     notifyObservers();
-                                    changeServer = true;
+                                    //changeServer = true;
                                     break;
                             }
                         }

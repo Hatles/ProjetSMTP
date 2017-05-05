@@ -4,16 +4,18 @@ import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Observable;
 
 /**
  * Created by lafay on 03/04/2017.
  */
-public class Client {
+public class Client extends Observable{
 
     private Message messageToSend;
     private ClientState state;
     private String user;
     private String domaine;
+    public String viewMessage = "";
 
     public Client(Message messageToSend, String user, String domaine){
 
@@ -25,9 +27,7 @@ public class Client {
     }
 
 
-    public String run(){
-
-        String viewMessage = "";
+    public void run(){
 
         for(Map.Entry<String, LinkedList<String>> serverRcpt : this.messageToSend.getRecipient().entrySet()){ // Pour chaque serveur dans les destinataires
             String [] serverInfo = serverRcpt.getKey().split(":");
@@ -41,6 +41,7 @@ public class Client {
 
             ServerAwnser answer;
             boolean changeServer = false;
+            state = ClientState.BUILD;
 
             while(!changeServer){
 
@@ -53,6 +54,10 @@ public class Client {
                             output = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
                         } catch (IOException e) {
                             viewMessage = "INTERNAL ERROR : " + e.getMessage() + "\n";
+                            setChanged();
+                            notifyObservers();
+                            changeServer = true;
+                            break;
                         }
                         state = ClientState.CONNECTION;
                         break;
@@ -61,23 +66,32 @@ public class Client {
                         answer = ServerAwnser.readAwnser(input);
                         if(!answer.getCode().equals("354")){
                             viewMessage = "No correct recipient found\n";
+                            sendCommand(output, "RSET\r\n");
+                            setChanged();
+                            notifyObservers();
                             break;
                         }
                         sendCommand(output, messageToSend.toMailDATA(user));
                         answer = ServerAwnser.readAwnser(input);
                         if(!answer.getCode().equals("250")){
                             viewMessage = "Fail to send body\n";
+                            setChanged();
+                            notifyObservers();
                             break;
                         }
-                        sendCommand(output, "QUIT");
+                        sendCommand(output, "QUIT\r\n");
                         changeServer = true;
                         viewMessage = "SUCCESS";
+                        setChanged();
+                        notifyObservers();
                         break;
 
                     case MAILING:
                         answer = ServerAwnser.readAwnser(input);
                         if(!answer.getCode().equals("250")){
                             viewMessage += "Fail to send MAIL command\n";
+                            setChanged();
+                            notifyObservers();
                             break;
                         }
 
@@ -92,6 +106,8 @@ public class Client {
                                     break;
                                 case "550":
                                     viewMessage += "Unknown user " + rcpt + "\n";
+                                    setChanged();
+                                    notifyObservers();
                                     changeServer = true;
                                     break;
                             }
@@ -99,13 +115,23 @@ public class Client {
                         if(tryRCPT > 0 ){
                             sendCommand(output, "DATA\r\n");
                             state = ClientState.DATA;
+                            break;
+                        }else{
+                            sendCommand(output, "RSET\r\n");
+                            viewMessage = "Aucun utilisateurs valide pour le serveur";
+                            changeServer = true;
+                            setChanged();
+                            notifyObservers();
                         }
                         break;
 
                     case WAITING:
                         answer = ServerAwnser.readAwnser(input);
                         if(!answer.getCode().equals("250")){
+                            sendCommand(output, "RSET\r\n");
                             viewMessage += "Server exception detected\n";
+                            setChanged();
+                            notifyObservers();
                             break;
                         }
                         sendCommand(output,"MAIL FROM:<" + user+ "@" + domaine + ">\r\n");
@@ -126,18 +152,23 @@ public class Client {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                     viewMessage = "INTERNAL ERROR : " + e.getMessage() + "\n";
+                                    setChanged();
+                                    notifyObservers();
                                 }
                                 continue;
                             default:
+                                sendCommand(output, "RSET\r\n");
                                 viewMessage = "INTERNAL ERROR : state not allow in this application\n" +
                                     "Check Domaines adresses, it should be like this : 'server:port'\n";
+                                setChanged();
+                                notifyObservers();
                                 changeServer = true;
                         }
                         break;
                 }
             }
         }
-        return viewMessage;
+
     }
 
     private static boolean sendCommand(BufferedWriter output, String command){

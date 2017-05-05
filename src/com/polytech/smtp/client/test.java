@@ -15,6 +15,7 @@ public class test {
 
         try {
             myMess.addRecipient("toto@localhost:5555");
+            myMess.addRecipient("toto@134.214.117.188:1024");
         } catch (Exception e) {
             e.printStackTrace();
         }
